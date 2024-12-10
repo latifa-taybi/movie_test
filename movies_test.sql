@@ -6,7 +6,7 @@ CREATE DATABASE movies_test;
 USE movies_test;
 
 -- create table subscription
-CREATE TABLE subscription( 
+CREATE TABLE subscription(
     subscriptionId int AUTO_INCREMENT PRIMARY KEY, 
     subscriptionType varchar(50) NOT NULL, 
     CHECK(subscriptionType = 'basic' OR subscriptionType = 'premium'), 
@@ -59,3 +59,17 @@ CREATE TABLE review(
 -- Insérer un film : Ajouter un nouveau film intitulé Data Science Adventures dans le genre "Documentary".
 INSERT INTO movie(title, genre, releaseYear, duration, rating) 
 VALUES ('hello','documentary','2002','30','kk');
+
+-- Rechercher des films : Lister tous les films du genre "Comedy" sortis après 2020
+SELECT * FROM movie WHERE genre = 'Comedy' AND releaseYear > 2020;
+
+-- Mise à jour des abonnements : Passer tous les utilisateurs de "Basic" à "Premium"..
+UPDATE users 
+SET subscriptionId = (SELECT subscriptionId FROM subscription WHERE subscriptionType = 'premium' LIMIT 1) 
+WHERE subscriptionId = (SELECT subscriptionId FROM subscription WHERE subscriptionType = 'basic' LIMIT 1);
+
+-- Afficher les abonnements : Joindre les utilisateurs à leurs types d'abonnements.
+SELECT U.firstName, U.lastName, S.subscriptionType
+FROM users U
+JOIN subscription S ON S.subscriptionId = U.subscriptionId;
+
