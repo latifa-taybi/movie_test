@@ -73,3 +73,36 @@ SELECT U.firstName, U.lastName, S.subscriptionType
 FROM users U
 JOIN subscription S ON S.subscriptionId = U.subscriptionId;
 
+-- Filtrer les visionnages : Trouver tous les utilisateurs ayant terminé de regarder un film.SELECT U.firstName, U.lastName, M.title, W.watchdate
+SELECT U.firstName, U.lastName, M.title, W.completionpercentage
+FROM watchhistory W
+JOIN users U ON W.userId = U.userId
+JOIN movie M ON W.movieId= M.movieId
+WHERE W.completionpercentage = 100;
+
+-- Trier et limiter : Afficher les 5 films les plus longs, triés par durée.
+SELECT M.title, M.duration
+FROM movie M
+ORDER BY M.duration DESC
+LIMIT 5;
+
+-- Agrégation : Calculer le pourcentage moyen de complétion pour chaque film.
+SELECT AVG(W.completionpercentage), M.title 
+FROM watchhistory W 
+RIGHT JOIN movie M ON W.movieId= M.movieId 
+GROUP BY M.title;
+
+-- Group By : Grouper les utilisateurs par type d’abonnement et compter le nombre total d’utilisateurs par groupe.SELECT S.subscriptionType, COUNT(userId)
+SELECT S.subscriptionType, COUNT(U.userId)
+FROM users U
+JOIN subscription S ON S.subscriptionId = U.subscriptionId
+GROUP BY S.subscriptionType;
+
+-- Sous-requête (Bonus): Trouver les films ayant une note moyenne supérieure à 4.
+SELECT M.title,(
+    SELECT AVG(R.rating) 
+    FROM review R 
+    WHERE R.movieId = M.movieId) AS moyenne
+FROM movie M
+GROUP BY  M.title
+HAVING moyenne > 4;
