@@ -106,3 +106,9 @@ SELECT M.title,(
 FROM movie M
 GROUP BY  M.title
 HAVING moyenne > 4;
+
+-- Self-Join (Bonus): Trouver des paires de films du même genre sortis la même année.
+SELECT M1.title, M2.title, M1.genre, M1.releaseYear
+FROM movie M1
+JOIN movie M2 ON M1.genre = M2.genre AND M1.releaseYear = M2.releaseYear 
+WHERE M1.movieId != M2.movieId;
